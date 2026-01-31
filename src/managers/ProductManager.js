@@ -39,7 +39,7 @@ class ProductManager {
     products[index] = {
         ...products[index],
         ...updatedFields,
-      id: products[index].id // 🔒 no se toca
+        id: products[index].id
     };
 
     await fs.writeFile(this.path, JSON.stringify(products, null, 2));
