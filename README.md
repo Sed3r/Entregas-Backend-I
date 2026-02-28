@@ -1,89 +1,163 @@
-# Backend I – Primera Entrega
+🛒 Backend I – Segunda Entrega
 
-Proyecto correspondiente a la **Entrega N°1** del curso **Backend I** de Coderhouse.
-
-El objetivo de esta entrega es desarrollar un servidor con Node.js y Express que permita gestionar productos y carritos de compra, utilizando persistencia en archivos JSON.
+Proyecto correspondiente a la Entrega N°2 del curso Backend I de Coderhouse.
 
 ---
 
-## 🚀 Tecnologías utilizadas
+📖 Introducción
 
-- Node.js
-- Express
-- JavaScript
-- File System (fs)
+En esta etapa se amplía el servidor desarrollado en la primera entrega, incorporando:
+
+Renderizado con Express-Handlebars
+
+Comunicación en tiempo real con Socket.io
+
+Persistencia en archivos JSON
+
+Actualización dinámica de productos en múltiples clientes
 
 ---
 
-## 📁 Estructura del proyecto
+🚀 Tecnologías Utilizadas
 
+Node.js
+
+Express
+
+Express-Handlebars
+
+Socket.io
+
+JavaScript
+
+File System (fs)
+
+---
+
+📁 Estructura del Proyecto
 src/
 ├── app.js
 ├── routes/
-│ ├── products.routes.js
-│ └── carts.routes.js
+│   ├── products.routes.js
+│   ├── carts.routes.js
+│   └── views.routes.js
 ├── managers/
-│ ├── ProductManager.js
-│ └── CartManager.js
+│   ├── ProductManager.js
+│   └── CartManager.js
+├── views/
+│   ├── home.handlebars
+│   └── realTimeProducts.handlebars
 └── data/
-├── products.json
-└── carts.json
+    ├── products.json
+    └── carts.json
 
 ---
 
-## ▶️ Cómo ejecutar el proyecto
 
-1. Clonar el repositorio:
-
+⚙️ Instalación
+1️⃣ Clonar el repositorio
 git clone https://github.com/Sed3r/Entregas-Backend-I.git
 
-2. Instalar dependencias:
-
+2️⃣ Instalar dependencias
 npm install
 
-3. Ejecutar el servidor:
-
+▶️ Ejecución
 npm start
 
-O en modo desarrollo:
+Modo desarrollo:
 
 npm run dev
 
-El servidor se ejecuta en el puerto **8080**.
+Servidor disponible en:
+
+http://localhost:8080
 
 ---
 
-## 📦 Endpoints disponibles
+🌐 Vistas Disponibles
 
-### Productos (`/api/products`)
+🏠 /home
 
-- `GET /` → Obtener todos los productos
-- `GET /:pid` → Obtener un producto por ID
-- `POST /` → Crear un nuevo producto
-- `PUT /:pid` → Actualizar un producto
-- `DELETE /:pid` → Eliminar un producto
+Renderiza el listado de productos con Handlebars
+
+Implementa Server Side Rendering
 
 ---
 
-### Carritos (`/api/carts`)
+⚡ /realtimeproducts
 
-- `POST /` → Crear un nuevo carrito
-- `GET /:cid` → Obtener productos de un carrito
-- `POST /:cid/product/:pid` → Agregar un producto al carrito
+Vista con actualización en tiempo real mediante WebSockets.
+
+Permite:
+
+➕ Agregar productos dinámicamente
+
+❌ Eliminar productos
+
+🔄 Sincronizar cambios en todas las pestañas abiertas
+
+💾 Persistir datos en products.json
+
+📦 Endpoints Disponibles
+
+🛍 Productos — /api/products
+
+| Método | Endpoint | Descripción                 |
+| ------ | -------- | --------------------------- |
+| GET    | `/`      | Obtener todos los productos |
+| GET    | `/:pid`  | Obtener producto por ID     |
+| POST   | `/`      | Crear nuevo producto        |
+| PUT    | `/:pid`  | Actualizar producto         |
+| DELETE | `/:pid`  | Eliminar producto           |
+
+🛒 Carritos — /api/carts
+
+| Método | Endpoint             | Descripción                 |
+| ------ | -------------------- | --------------------------- |
+| POST   | `/`                  | Crear nuevo carrito         |
+| GET    | `/:cid`              | Obtener carrito por ID      |
+| POST   | `/:cid/product/:pid` | Agregar producto al carrito |
+
 
 Si el producto ya existe en el carrito, se incrementa la cantidad.
 
 ---
 
-## 📝 Notas
+🔄 Funcionamiento en Tiempo Real
 
-- La persistencia de datos se realiza mediante archivos JSON.
-- Los IDs se generan automáticamente para evitar duplicados.
-- No se incluye interfaz gráfica; las pruebas se realizan mediante Postman o cliente similar.
+La vista /realtimeproducts utiliza Socket.io para:
+
+Detectar nuevas conexiones
+
+Emitir la lista actualizada de productos
+
+Sincronizar altas y eliminaciones
+
+Reflejar cambios instantáneamente en todos los clientes conectados
+
+Mantener persistencia en archivo JSON
 
 ---
 
-## 👤 Autor
+
+🧠 Conceptos Aplicados
+
+Arquitectura basada en routers
+
+Separación de responsabilidades (Routes / Managers)
+
+Persistencia en archivos
+
+Server Side Rendering
+
+Comunicación bidireccional con WebSockets
+
+Sincronización en tiempo real
+
+---
+
+👤 Autor
 
 Jonatan Calgaro
+
 mongodb://localhost:2701
