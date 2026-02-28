@@ -1,0 +1,91 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    button {
+        margin-left: 10px;
+        background-color: #d9534f;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<h1>Productos en Tiempo Real</h1>
+
+<ul id="productList">
+    {{#each products}}
+        <li>
+            <strong>{{this.title}}</strong> - ${{this.price}}
+        </li>
+    {{/each}}
+</ul>
+
+<hr>
+
+<h2>Agregar Producto</h2>
+
+<form id="productForm">
+    <input type="text" id="title" placeholder="Título" required />
+    <input type="number" id="price" placeholder="Precio" required />
+    <button type="submit">Agregar</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const productList = document.getElementById('productList');
+    const form = document.getElementById('productForm');
+
+    socket.on('updateProducts', (products) => {
+        productList.innerHTML = '';
+
+        if (products.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No hay productos cargados';
+            productList.appendChild(li);
+            return;
+        }
+
+        products.forEach(product => {
+            const li = document.createElement('li');
+
+            li.innerHTML = `
+                <strong>${product.title}</strong> - $${product.price}
+                <button data-id="${product.id}">Eliminar</button>
+            `;
+
+            productList.appendChild(li);
+        });
+    });
+
+    productList.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const id = e.target.getAttribute('data-id');
+            socket.emit('deleteProduct', Number(id));
+        }
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const price = Number(document.getElementById('price').value);
+
+        socket.emit('newProduct', { title, price });
+
+        form.reset();
+    });
+</script>

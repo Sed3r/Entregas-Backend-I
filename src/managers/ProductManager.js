@@ -7,8 +7,12 @@ class ProductManager {
     }
 
     async getProducts() {
-    const data = await fs.readFile(this.path, 'utf-8');
-    return JSON.parse(data);
+        try {
+            const data = await fs.readFile(this.path, 'utf-8');
+            return JSON.parse(data || '[]');
+        } catch {
+            return [];
+        }
     }
 
     async getProductById(id) {
