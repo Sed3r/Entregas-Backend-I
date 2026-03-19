@@ -1,0 +1,50 @@
+<h1>Carrito</h1>
+
+{{#if cart.products.length}}
+
+<ul>
+    {{#each cart.products}}
+        <li>
+            <strong>{{this.product.title}}</strong>
+            - ${{this.product.price}}
+            | Cantidad: {{this.quantity}}
+
+            <button onclick="deleteProduct('{{../cart._id}}','{{this.product._id}}')">
+                Eliminar
+            </button>
+        </li>
+    {{/each}}
+</ul>
+
+<hr>
+
+<h3>Total: $<span id="total"></span></h3>
+
+{{else}}
+
+<p>El carrito está vacío</p>
+
+{{/if}}
+
+<script>
+    
+    const products = {{{json cart.products}}};
+
+    let total = 0;
+
+    products.forEach(p => {
+        total += p.product.price * p.quantity;
+    });
+
+    document.getElementById('total').innerText = total;
+
+
+    async function deleteProduct(cartId, productId) {
+
+        await fetch(`/api/carts/${cartId}/products/${productId}`, {
+            method: "DELETE"
+        });
+
+        location.reload();
+    }
+</script>

@@ -32,6 +32,9 @@
     {{/each}}
 </ul>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 <hr>
 
 <h2>Agregar Producto</h2>
@@ -39,6 +42,10 @@
 <form id="productForm">
     <input type="text" id="title" placeholder="Título" required />
     <input type="number" id="price" placeholder="Precio" required />
+    <input type="text" id="description" placeholder="Descripción" required />
+    <input type="text" id="code" placeholder="Código" required />
+    <input type="number" id="stock" placeholder="Stock" required />
+    <input type="text" id="category" placeholder="Categoría" required />
     <button type="submit">Agregar</button>
 </form>
 
@@ -48,6 +55,18 @@
 
     const productList = document.getElementById('productList');
     const form = document.getElementById('productForm');
+
+    function showToast(message, color = "green") {
+        Toastify({
+            text: message,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: {
+                background: color
+            }
+        }).showToast();
+    }
 
     socket.on('updateProducts', (products) => {
         productList.innerHTML = '';
@@ -64,7 +83,7 @@
 
             li.innerHTML = `
                 <strong>${product.title}</strong> - $${product.price}
-                <button data-id="${product.id}">Eliminar</button>
+                <button data-id="${product._id}">Eliminar</button>
             `;
 
             productList.appendChild(li);
@@ -74,17 +93,28 @@
     productList.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
             const id = e.target.getAttribute('data-id');
-            socket.emit('deleteProduct', Number(id));
+            socket.emit('deleteProduct', id);
+
+            showToast("Producto eliminado", "#dc3545");
         }
     });
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const title = document.getElementById('title').value;
-        const price = Number(document.getElementById('price').value);
+        const product = {
+            title: document.getElementById('title').value,
+            price: Number(document.getElementById('price').value),
+            description: document.getElementById('description').value,
+            code: document.getElementById('code').value,
+            stock: Number(document.getElementById('stock').value),
+            category: document.getElementById('category').value,
+            status: true
+        };
 
-        socket.emit('newProduct', { title, price });
+        socket.emit('newProduct', product);
+
+        showToast("Producto agregado correctamente", "#28a745");
 
         form.reset();
     });
